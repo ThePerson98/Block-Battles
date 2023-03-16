@@ -1,0 +1,6 @@
+name: BlockBattles
+version: '1.0-SNAPSHOT'
+main: com.person98.blockbattlesbase.BlockBattles
+api-version: 1.19
+author: person98
+description: BlockBattles.
