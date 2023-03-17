@@ -1,4 +1,6 @@
-com\person98\blockbattlesbase\warps\IceWarp.class
 com\person98\blockbattlesbase\warps\FireWarp.class
 com\person98\blockbattlesbase\BlockBattles.class
-com\person98\blockbattlesbase\UndoCommand.class
+com\person98\blockbattlesbase\commands\UndoCommand.class
+com\person98\blockbattlesbase\handlers\GUIEventHandler.class
+com\person98\blockbattlesbase\commands\OpenGUICommand.class
+com\person98\blockbattlesbase\warps\IceWarp.class

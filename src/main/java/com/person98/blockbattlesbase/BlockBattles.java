@@ -1,5 +1,8 @@
 package com.person98.blockbattlesbase;
 
+import com.person98.blockbattlesbase.commands.OpenGUICommand;
+import com.person98.blockbattlesbase.commands.UndoCommand;
+import com.person98.blockbattlesbase.handlers.GUIEventHandler;
 import com.person98.blockbattlesbase.warps.FireWarp;
 import com.person98.blockbattlesbase.warps.IceWarp;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,7 +18,11 @@ public class BlockBattles extends JavaPlugin {
         getServer().getPluginManager().registerEvents(firewarp, this);
         getServer().getPluginManager().registerEvents(icewarp, this);
 
+        GUIEventHandler guiEventHandler = new GUIEventHandler(this);
+        getServer().getPluginManager().registerEvents(guiEventHandler, this);
+
         new UndoCommand(this, firewarp, icewarp);
+        new OpenGUICommand(this);
     }
 
     @Override

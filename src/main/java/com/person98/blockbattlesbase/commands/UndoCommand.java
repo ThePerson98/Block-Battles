@@ -1,5 +1,6 @@
-package com.person98.blockbattlesbase;
+package com.person98.blockbattlesbase.commands;
 
+import com.person98.blockbattlesbase.BlockBattles;
 import com.person98.blockbattlesbase.warps.FireWarp;
 import com.person98.blockbattlesbase.warps.IceWarp;
 import org.bukkit.command.Command;

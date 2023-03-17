@@ -8,3 +8,6 @@ commands:
   warpundo:
     description: Undo the last Firewarp or Icewarp
     usage: /warpundo <fire|ice>
+  openwarpgui:
+    description: Open the Warp GUI
+    usage: /openwarpgui
