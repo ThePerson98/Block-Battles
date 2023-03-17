@@ -1,3 +1,4 @@
 com\person98\blockbattlesbase\warps\IceWarp.class
-com\person98\blockbattlesbase\warps\Warp.class
-com\person98\blockbattlesbase\listeners\WarpListener.class
+com\person98\blockbattlesbase\warps\FireWarp.class
+com\person98\blockbattlesbase\BlockBattles.class
+com\person98\blockbattlesbase\UndoCommand.class

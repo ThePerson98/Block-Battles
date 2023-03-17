@@ -1,31 +1,78 @@
+
 package com.person98.blockbattlesbase.warps;
 
+import com.person98.blockbattlesbase.BlockBattles;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class IceWarp extends Warp {
+import java.util.*;
 
-    public IceWarp() {
-        super(Material.END_ROD, Material.SOUL_LANTERN);
+public class IceWarp implements Listener {
+
+    private BlockBattles plugin;
+    private HashMap<Block, Long> endRodPlacements;
+    private Deque<List<BlockState>> blockStatesStack;
+
+    public IceWarp(BlockBattles plugin) {
+        this.plugin = plugin;
+        this.endRodPlacements = new HashMap<>();
+        this.blockStatesStack = new ArrayDeque<>();
     }
 
-    @Override
-    public void activateWarp(BlockPlaceEvent event) {
-        Block center = event.getBlockPlaced();
-        replaceIceBlocks(center, Material.BLACK_CONCRETE, Material.WHITE_CONCRETE, Material.PACKED_ICE, Material.BLUE_STAINED_GLASS);
-    }
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Block block = event.getBlock();
 
-    private void replaceIceBlocks(Block center, Material fromBlack, Material fromWhite, Material toBlack, Material toWhite) {
-        for (int x = -5; x <= 5; x++) {
-            for (int z = -5; z <= 5; z++) {
-                Block block = center.getRelative(x, 0, z);
-                if (block.getType() == fromBlack) {
-                    block.setType(toBlack);
-                } else if (block.getType() == fromWhite) {
-                    block.setType(toWhite);
-                }
+        if (block.getType() == Material.END_ROD) {
+            endRodPlacements.put(block, System.currentTimeMillis());
+        } else if (block.getType() == Material.SOUL_LANTERN) {
+            Block endRodBlock = block.getRelative(0, -1, 0);
+            Long placementTime = endRodPlacements.remove(endRodBlock);
+
+            if (placementTime != null && System.currentTimeMillis() - placementTime <= 2000) {
+                swapBlocks(block);
             }
         }
+    }
+
+    public void undoLastWarp() {
+        if (blockStatesStack.isEmpty()) {
+            return;
+        }
+
+        List<BlockState> lastBlockStates = blockStatesStack.pop();
+        for (BlockState blockState : lastBlockStates) {
+            blockState.update(true);
+        }
+    }
+
+    private void swapBlocks(Block lantern) {
+        List<BlockState> blockStates = new ArrayList<>();
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            for (int x = -10; x <= 10; x++) {
+                for (int y = -10; y <= 10; y++) {
+                    for (int z = -10; z <= 10; z++) {
+                        Block block = lantern.getLocation().add(x, y, z).getBlock();
+                        Material type = block.getType();
+
+                        if (type == Material.WHITE_CONCRETE || type == Material.WHITE_CONCRETE_POWDER) {
+                            blockStates.add(block.getState());
+                            block.setType(Material.BLUE_STAINED_GLASS);
+                        } else if (type == Material.BLACK_CONCRETE_POWDER || type == Material.BLACK_CONCRETE) {
+                            blockStates.add(block.getState());
+                            block.setType(Material.PACKED_ICE);
+                        }
+                    }
+                }
+            }
+
+            blockStatesStack.push(blockStates);
+        });
     }
 }
